@@ -27,61 +27,41 @@ public class MO implements MO_RMI {
 		
 		hosts = new ArrayList<>();
 		hosts.add("192.168.178.38");
-		hosts.add("localhost");
+		hosts.add("192.168.178.220");
+		/**
+		 * java -Djava.security.policy=my.policy -Djava.rmi.server.hostname=192.168.178.220 MO 1 4
+		 */
+		
 	}
 	
 	public void sendMessage(Object message, int idReciever) throws Exception {
 		String name = "MO" + idReciever;
-		
 		MO_RMI process = null;
 		for (String s : hosts) {
-//			Registry registry = LocateRegistry.getRegistry(s);
 			try {
-				process = (MO_RMI) java.rmi.Naming.lookup("rmi://"+s+"/"+name);
-
-//				process = (MO_RMI) registry.lookup(name);
+				process = (MO_RMI) java.rmi.Naming.lookup("rmi://" + s + "/" + name);
 				break;
 			} catch (NotBoundException e) {
 
 			}
 		}
-//		
-//		Registry registry = LocateRegistry.getRegistry();
-//		MO_RMI process = (MO_RMI) registry.lookup(name);
-//		
-		
+
 		timestamp[id] = timestamp[id] + 1;
 		process.recieveMessage(message, buffer, timestamp, id);
 		buffer.put(idReciever, timestamp);
 	}
 
 	@Override
-	public void recieveMessage(Object m, HashMap<Integer, int[]> b, int[] t, int idSender)
-			throws RemoteException {
-//		System.out.println("recieved a message");	
-//		
-//		System.out.print("timestamp: ");
-//		for (int j=0; j<timestamp.length; j++) {
-//			System.out.print(timestamp[j]+" ");
-//		}
-//		System.out.println();
-		
-//		if (b.containsKey(id)) {
-//			System.out.print("timestamp from message: ");
-//			for (int j=0; j<b.get(id).length; j++) {
-//				System.out.print(b.get(id)[j]+" ");
-//			}
-//		}
-//		System.out.println();
-				
-		if ( !(b.containsKey(id) && checkDeliver(timestamp, b.get(id)))) {
+	public void recieveMessage(Object m, HashMap<Integer, int[]> b, int[] t, int idSender) throws RemoteException {
+
+		if (!(b.containsKey(id) && checkDeliver(timestamp, b.get(id)))) {
 			this.deliver(m, b, t);
-			
+
 			boolean loop = true;
 			while (loop) {
 				loop = false;
-				for (Object[] i : messageBuffer) {					
-					
+				for (Object[] i : messageBuffer) {
+
 					if (checkDeliver(timestamp, (int[]) i[2])) {
 						deliver(i[0], (HashMap<Integer, int[]>) i[3], (int[]) i[2]);
 						messageBuffer.remove(i);
@@ -89,39 +69,21 @@ public class MO implements MO_RMI {
 						break;
 					}
 				}
-
 			}
-			
-			
 		} else {
-			// add to buffer
-			messageBuffer.add(new Object[] {m, idSender, t, b});
+			messageBuffer.add(new Object[] { m, idSender, t, b });
 		}
-		
-		
 	}
 	
 	private synchronized void deliver(Object message, HashMap<Integer, int[]> b, int[] t) {
 		System.out.println(message.toString());
-		
-//		System.out.print("t: ");
-//		for (int j=0; j<t.length; j++) {
-//			System.out.print(t[j]+" ");
-//		}
-//		System.out.println();
-		
+
 		for (int i=0; i<timestamp.length; i++) {
 			if (timestamp[i] < t[i]) {
 				timestamp[i] = t[i];
 			}
 		}
-		
-//		System.out.print("timestamp: ");
-//		for (int j=0; j<timestamp.length; j++) {
-//			System.out.print(timestamp[j]+" ");
-//		}
-//		System.out.println();
-		
+
 		for (Integer i : b.keySet()) {
 			if (buffer.containsKey(i)) {
 				int[] temp = buffer.remove(i);
@@ -166,10 +128,7 @@ public class MO implements MO_RMI {
 			// args[0] = id, args[1] = numberProc
 			MO obj = new MO(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 			MO_RMI stub = (MO_RMI)	UnicastRemoteObject.exportObject(obj, 0);
-//	        Registry registry = LocateRegistry.getRegistry(); 
-//	        registry.bind("MO"+args[0], stub);  
 	        java.rmi.Naming.bind("rmi://localhost/MO"+args[0], stub);
-	        
 	        
 	        Thread.sleep(5000);
 			System.out.println("Server ready");
@@ -177,7 +136,6 @@ public class MO implements MO_RMI {
 			// from here send messages
 			for (int i=0; i<10; i++) {
 				Thread.sleep(Math.round(Math.random()*3000));
-				
 				
 				int idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
 				while (idrec==Integer.parseInt(args[0])) {
@@ -187,8 +145,7 @@ public class MO implements MO_RMI {
 
 			}
 			System.out.println("Finished sending messages");
-			System.out.println(obj.messageBuffer.toString());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 
