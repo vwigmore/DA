@@ -26,7 +26,8 @@ public class MO implements MO_RMI {
 		buffer = new HashMap<>();
 		
 		hosts = new ArrayList<>();
-		hosts.add("localhost");
+		hosts.add("145.94.224.235");
+		hosts.add("145.94.164.77");
 	}
 	
 	public void sendMessage(Object message, int idReciever) throws Exception {
@@ -155,6 +156,10 @@ public class MO implements MO_RMI {
 
 	public static void main(String args[]) {
 		try {
+			if (System.getSecurityManager() == null) {
+		        System.setSecurityManager(new SecurityManager());
+		    }
+			
 			// args[0] = id, args[1] = numberProc
 			MO obj = new MO(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 			MO_RMI stub = (MO_RMI)	UnicastRemoteObject.exportObject(obj, 0);
@@ -169,10 +174,10 @@ public class MO implements MO_RMI {
 				Thread.sleep(Math.round(Math.random()*3000));
 				
 				
-				int idrec = (int) Math.floor(Math.random()*3);
+				int idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
 				while (idrec==Integer.parseInt(args[0])) {
-					idrec = (int) Math.floor(Math.random()*3);
-				}
+					idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
+				}	
 				
 				obj.sendMessage("This is a message from id:" + args[0] + " for id:"+idrec + " at time:"+System.currentTimeMillis(), idrec);
 
