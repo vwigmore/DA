@@ -26,8 +26,8 @@ public class MO implements MO_RMI {
 		buffer = new HashMap<>();
 		
 		hosts = new ArrayList<>();
-		hosts.add("145.94.224.235");
-		hosts.add("145.94.164.77");
+		hosts.add("192.168.178.38");
+		hosts.add("localhost");
 	}
 	
 	public void sendMessage(Object message, int idReciever) throws Exception {
@@ -35,9 +35,11 @@ public class MO implements MO_RMI {
 		
 		MO_RMI process = null;
 		for (String s : hosts) {
-			Registry registry = LocateRegistry.getRegistry(s);
+//			Registry registry = LocateRegistry.getRegistry(s);
 			try {
-				process = (MO_RMI) registry.lookup(name);
+				process = (MO_RMI) java.rmi.Naming.lookup("rmi://"+s+"/"+name);
+
+//				process = (MO_RMI) registry.lookup(name);
 				break;
 			} catch (NotBoundException e) {
 
@@ -71,23 +73,23 @@ public class MO implements MO_RMI {
 //			}
 //		}
 //		System.out.println();
-		
-		
-		
+				
 		if ( !(b.containsKey(id) && checkDeliver(timestamp, b.get(id)))) {
 			this.deliver(m, b, t);
 			
 			boolean loop = true;
 			while (loop) {
 				loop = false;
-				for (Object[] i : messageBuffer) {
-//					
+				for (Object[] i : messageBuffer) {					
 					
 					if (checkDeliver(timestamp, (int[]) i[2])) {
 						deliver(i[0], (HashMap<Integer, int[]>) i[3], (int[]) i[2]);
+						messageBuffer.remove(i);
 						loop = true;
+						break;
 					}
 				}
+
 			}
 			
 			
@@ -96,10 +98,10 @@ public class MO implements MO_RMI {
 			messageBuffer.add(new Object[] {m, idSender, t, b});
 		}
 		
-//		timestamp[id] = timestamp[id] +1;
+		
 	}
 	
-	private void deliver(Object message, HashMap<Integer, int[]> b, int[] t) {
+	private synchronized void deliver(Object message, HashMap<Integer, int[]> b, int[] t) {
 		System.out.println(message.toString());
 		
 //		System.out.print("t: ");
@@ -128,6 +130,7 @@ public class MO implements MO_RMI {
 				buffer.put(i, b.get(i));
 			}
 		}
+		timestamp[id] = timestamp[id] + 1;
 	}
 	
 	private int[] compareArray(int[] x, int[] y) {
@@ -163,8 +166,10 @@ public class MO implements MO_RMI {
 			// args[0] = id, args[1] = numberProc
 			MO obj = new MO(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 			MO_RMI stub = (MO_RMI)	UnicastRemoteObject.exportObject(obj, 0);
-	        Registry registry = LocateRegistry.getRegistry(); 
-	        registry.bind("MO"+args[0], stub);  
+//	        Registry registry = LocateRegistry.getRegistry(); 
+//	        registry.bind("MO"+args[0], stub);  
+	        java.rmi.Naming.bind("rmi://localhost/MO"+args[0], stub);
+	        
 	        
 	        Thread.sleep(5000);
 			System.out.println("Server ready");
@@ -178,7 +183,6 @@ public class MO implements MO_RMI {
 				while (idrec==Integer.parseInt(args[0])) {
 					idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
 				}	
-				
 				obj.sendMessage("This is a message from id:" + args[0] + " for id:"+idrec + " at time:"+System.currentTimeMillis(), idrec);
 
 			}
