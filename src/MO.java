@@ -26,10 +26,10 @@ public class MO implements MO_RMI {
 		buffer = new HashMap<>();
 		
 		hosts = new ArrayList<>();
-		hosts.add("192.168.178.38");
-		hosts.add("192.168.178.220");
+		hosts.add("localhost");
+		hosts.add("145.94.165.104");
 		/**
-		 * java -Djava.security.policy=my.policy -Djava.rmi.server.hostname=192.168.178.220 MO 1 4
+		 * java -Djava.security.policy=my.policy -Djava.rmi.server.hostname=145.94.226.184 MO 1 4
 		 */
 		
 	}
@@ -76,7 +76,14 @@ public class MO implements MO_RMI {
 	}
 	
 	private synchronized void deliver(Object message, HashMap<Integer, int[]> b, int[] t) {
-		System.out.println(message.toString());
+		System.out.println(message.toString() + " send at: ");
+		for (int i=0; i<t.length; i++) {
+			System.out.print(t[i]+",");
+		}
+		System.out.print(" recieved at: ");
+		for (int i=0; i<timestamp.length; i++) {
+			System.out.print(timestamp[i]+",");
+		}
 
 		for (int i=0; i<timestamp.length; i++) {
 			if (timestamp[i] < t[i]) {
