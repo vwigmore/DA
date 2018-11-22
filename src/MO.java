@@ -86,13 +86,15 @@ public class MO implements MO_RMI {
 		}
 		
 		System.out.print(" buffer: ");
-		for(int i : buffer.keySet()) {
-			System.out.print("(");
-			int[] temp = buffer.get(i);
-			for(int j=0; j<temp.length; j++) {
-				System.out.print(temp[j]+",");
+		if (!buffer.isEmpty()) {
+			for (Integer i : buffer.keySet()) {
+				System.out.print("(");
+				int[] temp = buffer.get(i);
+				for (int j = 0; j < temp.length; j++) {
+					System.out.print(temp[j] + ",");
+				}
+				System.out.print("),");
 			}
-			System.out.print("),");
 		}
 		System.out.println();
 
