@@ -84,6 +84,17 @@ public class MO implements MO_RMI {
 		for (int i=0; i<timestamp.length; i++) {
 			System.out.print(timestamp[i]+",");
 		}
+		
+		System.out.print(" buffer: ");
+		for(int i : buffer.keySet()) {
+			System.out.print("(");
+			int[] temp = buffer.get(i);
+			for(int j=0; j<temp.length; j++) {
+				System.out.print(temp[j]+",");
+			}
+			System.out.print("),");
+		}
+		System.out.println();
 
 		for (int i=0; i<timestamp.length; i++) {
 			if (timestamp[i] < t[i]) {
@@ -141,16 +152,16 @@ public class MO implements MO_RMI {
 			System.out.println("Server ready");
 			
 			// from here send messages
-			for (int i=0; i<10; i++) {
+			for (int i=0; i<5; i++) {
 				Thread.sleep(Math.round(Math.random()*3000));
 				
 				int idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
 				while (idrec==Integer.parseInt(args[0])) {
 					idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
 				}	
-				obj.sendMessage("This is a message from id:" + args[0] + " for id:"+idrec + " at time:"+System.currentTimeMillis(), idrec);
+				obj.sendMessage("This is a message from id:" + args[0] + " for id:"+idrec, idrec);
 
-			}
+			}	
 			System.out.println("Finished sending messages");
 
 		} catch (Exception e) {
