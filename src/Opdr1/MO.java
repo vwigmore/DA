@@ -1,3 +1,4 @@
+package Opdr1;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,6 +16,12 @@ public class MO implements MO_RMI {
 	int[] timestamp;
 	int id;
 	List<String> hosts;
+	
+	Object msg_temp;
+	HashMap<Integer, int[]> b_temp = new HashMap<>();
+	int[] t_temp;
+	int idSender_temp;
+	boolean check = false;
 	
 	protected MO(int id, int numberProc) throws RemoteException {
 		super();
@@ -54,22 +61,50 @@ public class MO implements MO_RMI {
 
 		timestamp[id] = timestamp[id] + 1;
 		System.out.println("send message:"+message);
-		process.recieveMessage(message, buffer, timestamp, id);
-		buffer.put(idReciever, timestamp);
+		process.recieveMessage(message, (HashMap<Integer, int[]>) buffer.clone(), timestamp.clone(), id);
+		buffer.put(idReciever, timestamp.clone());
 	}
 
 	@Override
 	public void recieveMessage(Object m, HashMap<Integer, int[]> b, int[] t, int idSender) throws RemoteException {
-
-		if (!(b.containsKey(id) && checkDeliver(timestamp, b.get(id)))) {
+		
+		System.out.print(" buffer: ");
+		if (!b.isEmpty()) {
+			for (Integer i : b.keySet()) {
+				System.out.print(i+"(");
+				int[] temp = b.get(i);
+				for (int j = 0; j < temp.length; j++) {
+					System.out.print(temp[j] + ",");
+				}
+				System.out.print("),");
+			}
+		}
+		System.out.println();
+		
+		if (idSender==1 && !check) {
+			msg_temp = m;
+			b_temp = b;
+			t_temp = t;
+			idSender_temp = idSender;
+			return;
+		}
+		if (idSender==2) {
+			check = true;
+		}
+		
+		System.out.println("recieved message: "+m);
+		
+		
+		if ((!b.containsKey(id)) || checkDeliver(timestamp, b.get(id))) {
 			this.deliver(m, b, t);
 
 			boolean loop = true;
 			while (loop) {
 				loop = false;
 				for (Object[] i : messageBuffer) {
-
-					if (checkDeliver(timestamp, (int[]) i[2])) {
+					
+					
+					if (checkDeliver(timestamp, ((HashMap<Integer,int[]>)i[3]).get(id))) {
 						deliver(i[0], (HashMap<Integer, int[]>) i[3], (int[]) i[2]);
 						messageBuffer.remove(i);
 						loop = true;
@@ -78,7 +113,10 @@ public class MO implements MO_RMI {
 				}
 			}
 		} else {
-			messageBuffer.add(new Object[] { m, idSender, t, b });
+			messageBuffer.add(new Object[] { m, idSender, t.clone(), b.clone()});
+		}
+		if (idSender==2) {
+			recieveMessage(msg_temp, b_temp, t_temp, idSender_temp);
 		}
 	}
 	
@@ -87,16 +125,16 @@ public class MO implements MO_RMI {
 		for (int i=0; i<t.length; i++) {
 			System.out.print(t[i]+",");
 		}
-		System.out.print(" recieved at: ");
+		System.out.print(" delivered at: ");
 		for (int i=0; i<timestamp.length; i++) {
 			System.out.print(timestamp[i]+",");
 		}
 		
 		System.out.print(" buffer: ");
-		if (!buffer.isEmpty()) {
-			for (Integer i : buffer.keySet()) {
+		if (!b.isEmpty()) {
+			for (Integer i : b.keySet()) {
 				System.out.print(i+"(");
-				int[] temp = buffer.get(i);
+				int[] temp = b.get(i);
 				for (int j = 0; j < temp.length; j++) {
 					System.out.print(temp[j] + ",");
 				}
@@ -114,9 +152,9 @@ public class MO implements MO_RMI {
 		for (Integer i : b.keySet()) {
 			if (buffer.containsKey(i)) {
 				int[] temp = buffer.remove(i);
-				buffer.put(i, compareArray(temp, b.get(i)));
+				buffer.put(i, compareArray(temp, b.get(i)).clone());
 			} else {
-				buffer.put(i, b.get(i));
+				buffer.put(i, b.get(i).clone());
 			}
 		}
 		timestamp[id] = timestamp[id] + 1;
