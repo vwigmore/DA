@@ -27,7 +27,7 @@ public class MO implements MO_RMI {
 		
 		hosts = new ArrayList<>();
 		hosts.add("localhost");
-		hosts.add("145.94.165.104");
+//		hosts.add("145.94.165.104");
 		/**
 		 * java -Djava.security.policy=my.policy -Djava.rmi.server.hostname=145.94.226.184 MO 1 4
 		 */
@@ -35,6 +35,8 @@ public class MO implements MO_RMI {
 	}
 	
 	public void sendMessage(Object message, int idReciever) throws Exception {
+		double rand = Math.round(Math.random()*5000);
+		 Thread.sleep((long) rand);
 		String name = "MO" + idReciever;
 		MO_RMI process = null;
 		for (String s : hosts) {
@@ -47,6 +49,7 @@ public class MO implements MO_RMI {
 		}
 
 		timestamp[id] = timestamp[id] + 1;
+		System.out.println("send message:"+message);
 		process.recieveMessage(message, buffer, timestamp, id);
 		buffer.put(idReciever, timestamp);
 	}
@@ -138,7 +141,7 @@ public class MO implements MO_RMI {
 		}
 		return true;
 	}
-
+	
 	public static void main(String args[]) {
 		try {
 			if (System.getSecurityManager() == null) {
@@ -154,7 +157,7 @@ public class MO implements MO_RMI {
 			System.out.println("Server ready");
 			
 			// from here send messages
-			for (int i=0; i<5; i++) {
+			for (int i=0; i<10; i++) {
 				Thread.sleep(Math.round(Math.random()*3000));
 				
 				int idrec = (int) Math.floor(Math.random()*Integer.parseInt(args[1]));
