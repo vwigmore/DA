@@ -1,3 +1,4 @@
+import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class Main {
 	    }
 		System.out.println("starting the main");
 		try {
-			for (int i=0; i<4; i++) {
+			for (int i=0; i<2; i++) {
 				MO obj = new MO(i, 4);
 				MO_RMI stub = (MO_RMI)	UnicastRemoteObject.exportObject(obj, 0);
 		        java.rmi.Naming.bind("rmi://localhost/MO"+i, stub);
@@ -32,10 +33,25 @@ public class Main {
 		      new Thread("" + i){
 		        public void run(){
 		        	try {
+		        		List<String> hosts = new ArrayList<>();
+		        		hosts.add("localhost");
+		        		hosts.add("145.94.165.174");
 		        		int rand = (int) Math.floor(Math.random()*4);
-		    			Main.processes.get(Integer.parseInt(this.getName())).sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
-		    			Main.processes.get(Integer.parseInt(this.getName())).sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
-		    			Main.processes.get(Integer.parseInt(this.getName())).sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
+
+		        		String name = "MO" + rand;
+		        		MO_RMI process = null;
+		        		for (String s : hosts) {
+		        			try {
+		        				process = (MO_RMI) java.rmi.Naming.lookup("rmi://" + s + "/" + name);
+		        				break;
+		        			} catch (NotBoundException e) {
+
+		        			}
+		        		}
+		        		
+		    			process.sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
+		    			process.sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
+		    			process.sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
 
 		    		} catch (Exception e) {
 		    			e.printStackTrace();

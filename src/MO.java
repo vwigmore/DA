@@ -27,23 +27,27 @@ public class MO implements MO_RMI {
 		
 		hosts = new ArrayList<>();
 		hosts.add("localhost");
-//		hosts.add("145.94.165.104");
+		hosts.add("145.94.165.174");
 		/**
 		 * java -Djava.security.policy=my.policy -Djava.rmi.server.hostname=145.94.226.184 MO 1 4
 		 */
 		
 	}
 	
-	public void sendMessage(Object message, int idReciever) throws Exception {
+	public void sendMessage(Object message, int idReciever) throws RemoteException {
 		double rand = Math.round(Math.random()*5000);
-		 Thread.sleep((long) rand);
+		 try {
+			Thread.sleep((long) rand);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		String name = "MO" + idReciever;
 		MO_RMI process = null;
 		for (String s : hosts) {
 			try {
 				process = (MO_RMI) java.rmi.Naming.lookup("rmi://" + s + "/" + name);
 				break;
-			} catch (NotBoundException e) {
+			} catch (Exception e) {
 
 			}
 		}
