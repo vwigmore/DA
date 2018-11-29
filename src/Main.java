@@ -17,16 +17,16 @@ public class Main {
 		System.out.println("starting the main");
 		try {
 			for (int i=0; i<Integer.parseInt(args[0]); i++) {
-				Component obj = new Component(i, Integer.parseInt(args[0]));
+				Component obj = new Component(i, Integer.parseInt(args[1]));
 				Component_RMI stub = (Component_RMI) UnicastRemoteObject.exportObject(obj, 0);
 				
-				if (i<Math.floor(Integer.parseInt(args[0])/2) ) {
-					java.rmi.Naming.bind("rmi://"+ "145.94.167.4" +"/Component"+i, stub);
-			        processes.add(obj);
-				} else {
+//				if (i<Math.floor(Integer.parseInt(args[0])/2) ) {
+//					java.rmi.Naming.bind("rmi://"+ "145.94.167.4" +"/Component"+i, stub);
+//			        processes.add(obj);
+//				} else {
 					java.rmi.Naming.bind("rmi://localhost/Component"+i, stub);
 			        processes.add(obj);
-				}
+//				}
 		        
 			}
 		} catch (Exception e) {
@@ -34,7 +34,7 @@ public class Main {
 		}
 		
 		
-		for(int i=0; i<Integer.parseInt(args[0]); i++){
+		for(int i=0; i<Integer.parseInt(args[1]); i++){
 		      new Thread("" + i){
 		        public void run(){
 		        	try {
