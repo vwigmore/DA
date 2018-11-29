@@ -1,13 +1,9 @@
-package Opdr2;
+
 
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-
-import Opdr1.MO;
-import Opdr2.Component;
-import Opdr2.Component_RMI;
 
 public class Main {
 
@@ -25,7 +21,7 @@ public class Main {
 				Component_RMI stub = (Component_RMI) UnicastRemoteObject.exportObject(obj, 0);
 				
 				if (i<Math.floor(Integer.parseInt(args[0])/2) ) {
-					java.rmi.Naming.bind("rmi://"+ "ip" +"/Component"+i, stub);
+					java.rmi.Naming.bind("rmi://"+ "145.94.167.4" +"/Component"+i, stub);
 			        processes.add(obj);
 				} else {
 					java.rmi.Naming.bind("rmi://localhost/Component"+i, stub);
@@ -45,7 +41,7 @@ public class Main {
 
 		        		List<String> hosts = new ArrayList<>();
 		        		hosts.add("localhost");
-//		        		hosts.add("145.94.165.174");
+		        		hosts.add("145.94.167.4");
 
 		        		String name = "Component" + this.getName();
 		        		Component_RMI process = null;
@@ -61,21 +57,7 @@ public class Main {
 		        			Thread.sleep((long) (Math.random()*3000));
 		        			
 		        			process.makeRequest();
-		        			// making request 
-//		        			process.sendRequest("request", Integer.parseInt(this.getName()));
-		        		
-		        		
-		        		
-		        		
-		        		
-		        		
-//		        		for(int j=0; j<3; j++) {
-//		        			int rand = (int) Math.floor(Math.random()*4);
-//			        		while(rand==Integer.parseInt(this.getName())) {
-//			        			 rand = (int) Math.floor(Math.random()*4);
-//			        		}
-//			    			process.sendMessage("This is a message from id:" + this.getName() + " for id:"+rand, rand);
-//		        		}
+
 		        		
 		        		
 		    		} catch (Exception e) {
@@ -85,16 +67,7 @@ public class Main {
 		      }.start();
 		    }
 		
-//		try {
-//			processes.get(0).sendMessage("Message1", 1);
-//			processes.get(0).sendMessage("Message2", 2);
-//			processes.get(2).sendMessage("Message3", 1);
-//
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
+
 		System.out.println("Finished");
 		
 		

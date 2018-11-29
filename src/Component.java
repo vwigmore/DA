@@ -1,6 +1,5 @@
-package Opdr2;
 
-import java.rmi.NotBoundException;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +62,7 @@ public class Component implements Component_RMI{
 
 				List<String> hosts = new ArrayList<>();
 				hosts.add("localhost");
-//			hosts.add("145.94.165.174");
+				hosts.add("145.94.167.4");
 				String name = "Component" + idSender;
 				Component_RMI process = null;
 				for (String s : hosts) {
@@ -84,7 +83,7 @@ public class Component implements Component_RMI{
 
 			List<String> hosts = new ArrayList<>();
 			hosts.add("localhost");
-//			hosts.add("145.94.165.174");
+			hosts.add("145.94.167.4");
 			String name = "Component" + idSender;
 			Component_RMI process = null;
 			for (String s : hosts) {
@@ -132,7 +131,7 @@ public class Component implements Component_RMI{
 						
 			List<String> hosts = new ArrayList<>();
 			hosts.add("localhost");
-//			hosts.add("145.94.165.174");
+			hosts.add("145.94.167.4");
 			String name = "Component" + idRand;
 			Component_RMI process = null;
 			for (String s : hosts) {
@@ -172,7 +171,7 @@ public class Component implements Component_RMI{
 		if (S[id]=="H") {
 			List<String> hosts = new ArrayList<>();
 			hosts.add("localhost");
-//			hosts.add("145.94.165.174");
+			hosts.add("145.94.167.4");
 			String name = "Component" + id;
 			Component_RMI process = null;
 			for (String s : hosts) {
@@ -194,7 +193,7 @@ public class Component implements Component_RMI{
 					
 					List<String> hosts = new ArrayList<>();
 					hosts.add("localhost");
-//					hosts.add("145.94.165.174");
+					hosts.add("145.94.167.4");
 					String name = "Component" + i;
 					Component_RMI process = null;
 					for (String s : hosts) {
