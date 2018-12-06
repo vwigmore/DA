@@ -1,4 +1,5 @@
+import java.rmi.Remote;
 
-public class Node_RMI {
+public interface Node_RMI extends Remote {
 
 }
