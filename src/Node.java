@@ -14,9 +14,9 @@ public class Node implements Node_RMI {
 	private int FN = 0;
 	private int LN = 0;
 	
-	private int in_branch = -1;
-	private int test_edge = -1;
-	private int best_edge = -1;
+	private int in_branch = 0;
+	private int test_edge = 0;
+	private int best_edge = 0;
 	private int best_weight = Integer.MAX_VALUE;
 	private int find_count = 0;
 	
@@ -71,6 +71,7 @@ public class Node implements Node_RMI {
 	}
 	
 	private void test() throws RemoteException {
+		System.out.println("id:"+ id + " test");
 		boolean test  = false;
 		int tempWeight = Integer.MAX_VALUE;
 		
@@ -114,9 +115,11 @@ public class Node implements Node_RMI {
 	
 	
 	private void report() throws RemoteException {
+		System.out.println("id:"+id + " report");
+		System.out.println("find_count:"+find_count+ " test_edge:"+test_edge);
 		if (find_count==0 && test_edge==0) {
 			SN = "found";
-			
+			System.out.println("in_branch:" + in_branch);
 			int idReciever = 0;
 			for (Integer i : w.keySet()) {
 				if (w.get(i)==in_branch) {
@@ -141,6 +144,7 @@ public class Node implements Node_RMI {
 	}
 	
 	private void change_root() throws RemoteException {
+		System.out.println("id:"+ id + " change_root");
 		if (SE.get(best_edge).equals("in_MST")) {
 			
 			int idReciever = 0;
@@ -218,8 +222,10 @@ public class Node implements Node_RMI {
 				}
 			}
 		}
-		
+//		System.out.println("handleQ size:"+messageQueue.size());
+
 		if (deleted) {
+			System.out.println("handleQ size:"+messageQueue.size());
 			handleMessageQueue();
 		}
 	}
@@ -227,7 +233,7 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void connect(int idSender, int weight, int L) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "connect");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " connect" + " L:"+L);
 		
 		try {
 			Thread.sleep((long)Math.random()*3000);
@@ -289,7 +295,7 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void initiate(int idSender, int weight, int L, int F, String S) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "initiate");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " initiate"+ " L:"+L + " F:" +F +" S:"+ S);
 
 		try {
 			Thread.sleep((long)Math.random()*3000);
@@ -341,7 +347,7 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void test(int idSender, int weight, int L, int F) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "test");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " test" + " L:"+L + " F:"+F);
 
 		try {
 			Thread.sleep((long)Math.random()*3000);
@@ -406,7 +412,7 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void reject(int idSender, int weight) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "reject");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " reject");
 
 		try {
 			Thread.sleep((long)Math.random()*3000);
@@ -422,7 +428,7 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void accept(int idSender, int weight) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "accept");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " accept");
 
 		try {
 			Thread.sleep((long)Math.random()*3000);
@@ -440,13 +446,14 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void report(int idSender, int weight, int W) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "report");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " report" + " W:" +W);
 
 		try {
 			Thread.sleep((long)Math.random()*3000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println("in_branch:"+ in_branch + " weight:"+ weight);
 		if (weight!=in_branch) {
 			find_count--;
 			if (W<best_weight) {
@@ -485,7 +492,7 @@ public class Node implements Node_RMI {
 
 	@Override
 	public void change_root(int idSender, int weight) throws RemoteException {
-		System.out.println("own_id:"+id+ "sender_id"+idSender+ "change_root");
+		System.out.println("own_id:"+id+ " sender_id"+idSender+ " change_root");
 
 		try {
 			Thread.sleep((long)Math.random()*3000);
