@@ -36,7 +36,8 @@ public class Node implements Node_RMI {
 		messageQueue = new ArrayList<>();
 	}
 	
-	public void wakeup() throws RemoteException {
+	public void wakeup() throws RemoteException { 
+		System.out.println("wakeup id:"+id);
 		int tempWeight = Integer.MAX_VALUE;
 		for (Integer i : SE.keySet()) {
 			if (tempWeight> i) {
@@ -243,6 +244,7 @@ public class Node implements Node_RMI {
 		if (SN.equals("sleeping")) {
 			wakeup();
 		}
+		System.out.println("id:" + id + "in connect");
 		if (L<LN) {
 			SE.put(weight, "in_MST");
 			
