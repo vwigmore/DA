@@ -16,10 +16,8 @@ public class Main {
 			public void run() {
 				try {
 					HashMap<Integer, Integer> map1 = new HashMap<>();
-					map1.put(3, 20);
+					map1.put(6, 20);
 					map1.put(2, 50);
-					map1.put(4, 7);
-					map1.put(5, 15);
 
 					Node obj1 = new Node(1, map1, 6);
 					Node_RMI stub1 = (Node_RMI) UnicastRemoteObject.exportObject(obj1, 0);
@@ -28,16 +26,14 @@ public class Main {
 					e.printStackTrace();
 				}
 			}
-		}.start();
+		}.start(); 
 		} else if (args[0].equals("2")) {
 		new Thread("2") {
 			public void run() {
 				try {
 					HashMap<Integer, Integer> map2 = new HashMap<>();
-					map2.put(3, 10);
 					map2.put(1, 50);
-					map2.put(4, 16);
-					map2.put(6, 30);
+					map2.put(3, 16);
 
 					Node obj2 = new Node(2, map2, 6);
 					Node_RMI stub2 = (Node_RMI) UnicastRemoteObject.exportObject(obj2, 0);
@@ -52,8 +48,8 @@ public class Main {
 				public void run() {
 					try {
 						HashMap<Integer, Integer> map3 = new HashMap<>();
-						map3.put(1, 20);
-						map3.put(2, 10);
+						map3.put(2, 16);
+						map3.put(4, 10);
 
 						Node obj3 = new Node(3, map3, 6);
 						Node_RMI stub3 = (Node_RMI) UnicastRemoteObject.exportObject(obj3, 0);
@@ -68,7 +64,6 @@ public class Main {
 				public void run() {
 					try {
 						HashMap<Integer, Integer> map5 = new HashMap<>();
-						map5.put(1, 15);
 						map5.put(6, 11);
 
 						Node obj5 = new Node(5, map5, 6);
@@ -85,7 +80,7 @@ public class Main {
 					try {
 						HashMap<Integer, Integer> map6 = new HashMap<>();
 						map6.put(5, 11);
-						map6.put(2, 30);
+						map6.put(1, 20);
 
 						Node obj6 = new Node(6, map6, 6);
 						Node_RMI stub6 = (Node_RMI) UnicastRemoteObject.exportObject(obj6, 0);
@@ -100,8 +95,7 @@ public class Main {
 			public void run() {
 				try {
 					HashMap<Integer, Integer> map4 = new HashMap<>();
-					map4.put(2, 16);
-					map4.put(1, 7);
+					map4.put(3, 10);
 					Node obj4 = new Node(4, map4, 6);
 					Node_RMI stub4 = (Node_RMI) UnicastRemoteObject.exportObject(obj4, 0);
 					java.rmi.Naming.rebind("rmi://localhost/Node" + 4, stub4);

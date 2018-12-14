@@ -756,13 +756,9 @@ public class Node implements Node_RMI {
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 
 	private int[] compareArray(int[] x, int[] y) {
