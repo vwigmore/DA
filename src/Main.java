@@ -16,10 +16,10 @@ public class Main {
 			public void run() {
 				try {
 					HashMap<Integer, Integer> map1 = new HashMap<>();
-					map1.put(6, 20);
-					map1.put(2, 50);
-
-					Node obj1 = new Node(1, map1, 6);
+					map1.put(2, 7);
+					map1.put(3, 15);
+					
+					Node obj1 = new Node(1, map1, 4);
 					Node_RMI stub1 = (Node_RMI) UnicastRemoteObject.exportObject(obj1, 0);
 					java.rmi.Naming.rebind("rmi://localhost/Node" + 1, stub1);
 				} catch (Exception e) {

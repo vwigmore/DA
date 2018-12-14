@@ -154,7 +154,7 @@ public class Node implements Node_RMI {
 
 			List<String> hosts = new ArrayList<>();
 			hosts.add("localhost");
-//			hosts.add("145.94.165.137");
+			hosts.add("145.94.181.177");
 			String name = "Node" + idReciever;
 			Node_RMI process = null;
 			for (String s : hosts) {
@@ -206,7 +206,7 @@ public class Node implements Node_RMI {
 				}
 				List<String> hosts = new ArrayList<>();
 				hosts.add("localhost");
-//				hosts.add("145.94.165.137");
+				hosts.add("145.94.181.177");
 				String name = "Node" + idReciever;
 				Node_RMI process = null;
 				for (String s : hosts) {
@@ -251,7 +251,7 @@ public class Node implements Node_RMI {
 
 				List<String> hosts = new ArrayList<>();
 				hosts.add("localhost");
-//				hosts.add("145.94.165.137");
+				hosts.add("145.94.181.177");
 				String name = "Node" + idReciever;
 				Node_RMI process = null;
 				for (String s : hosts) {
@@ -290,7 +290,7 @@ public class Node implements Node_RMI {
 				}
 				List<String> hosts = new ArrayList<>();
 				hosts.add("localhost");
-//				hosts.add("145.94.165.137");
+				hosts.add("145.94.181.177");
 				String name = "Node" + idReciever;
 				Node_RMI process = null;
 				for (String s : hosts) {
@@ -322,7 +322,7 @@ public class Node implements Node_RMI {
 
 				List<String> hosts = new ArrayList<>();
 				hosts.add("localhost");
-//				hosts.add("145.94.165.137");
+				hosts.add("145.94.181.177");
 				String name = "Node" + idReciever;
 				Node_RMI process = null;
 				for (String s : hosts) {
@@ -401,12 +401,13 @@ public class Node implements Node_RMI {
 		}
 		System.out.println("id:" + id + "in connect");
 		if (L < LN) {
+			System.out.println("ABSORB L:"+L+ " LN:"+LN + " FN:"+FN);
 			SE.put(weight, "in_MST");
 
 			try {
 				List<String> hosts = new ArrayList<>();
 				hosts.add("localhost");
-//				hosts.add("145.94.165.137");
+				hosts.add("145.94.181.177");
 				String name = "Node" + idSender;
 				Node_RMI process = null;
 				for (String s : hosts) {
@@ -447,7 +448,7 @@ public class Node implements Node_RMI {
 				try {
 					List<String> hosts = new ArrayList<>();
 					hosts.add("localhost");
-//					hosts.add("145.94.165.137");
+					hosts.add("145.94.181.177");
 					String name = "Node" + idSender;
 					Node_RMI process = null;
 					for (String s : hosts) {
@@ -465,6 +466,7 @@ public class Node implements Node_RMI {
 					temp.add("find");
 					timestamp[id - 1] = timestamp[id - 1] + 1;
 					System.out.println("id:" + id + " sending initiate to:" + idSender);
+					System.out.println("MERGE LN:"+LN +" FN:" + weight);
 					process.message(id, (HashMap<Integer, int[]>) buffer.clone(), timestamp.clone(), temp);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -503,7 +505,7 @@ public class Node implements Node_RMI {
 					}
 					List<String> hosts = new ArrayList<>();
 					hosts.add("localhost");
-//					hosts.add("145.94.165.137");
+					hosts.add("145.94.181.177");
 					String name = "Node" + idReciever;
 					Node_RMI process = null;
 					for (String s : hosts) {
@@ -571,7 +573,7 @@ public class Node implements Node_RMI {
 				try {
 					List<String> hosts = new ArrayList<>();
 					hosts.add("localhost");
-//					hosts.add("145.94.165.137");
+					hosts.add("145.94.181.177");
 					String name = "Node" + idSender;
 					Node_RMI process = null;
 					for (String s : hosts) {
@@ -601,7 +603,7 @@ public class Node implements Node_RMI {
 					try {
 						List<String> hosts = new ArrayList<>();
 						hosts.add("localhost");
-//						hosts.add("145.94.165.137");
+						hosts.add("145.94.181.177");
 						String name = "Node" + idSender;
 						Node_RMI process = null;
 						for (String s : hosts) {
@@ -671,7 +673,10 @@ public class Node implements Node_RMI {
 		}
 		System.out.println("own_id:" + id + " sender_id" + idSender + " report" + " W:" + W);
 		System.out.println("in_branch:" + in_branch + " weight:" + weight + " test_edge:" + test_edge);
-
+		if (weight==test_edge && W==Integer.MAX_VALUE) {
+			test_edge = 0;
+		}
+		
 		if (weight != in_branch) {
 			find_count--;
 			if (W < best_weight) {
@@ -721,6 +726,7 @@ public class Node implements Node_RMI {
 		if (!halt) {
 			System.out.println("HALT");
 			halt = true;
+			System.out.println("LN:"+LN+" core:"+FN);
 			for (Integer i : SE.keySet()) {
 				if (SE.get(i).equals("in_MST")) {
 					System.out.println("edge from id:" + id + " edge in MST:" + i);
@@ -734,7 +740,7 @@ public class Node implements Node_RMI {
 
 					List<String> hosts = new ArrayList<>();
 					hosts.add("localhost");
-//					hosts.add("145.94.165.137");
+					hosts.add("145.94.181.177");
 					String name = "Node" + idReciever;
 					Node_RMI process = null;
 					for (String s : hosts) {
